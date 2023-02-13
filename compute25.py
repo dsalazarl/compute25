@@ -7,6 +7,23 @@ AVAILABLE_OPERATIONS = ['+','-','*','/']
 def is_operation(char: str) -> bool:
 	return char in AVAILABLE_OPERATIONS
 
+def is_digit(char: str) -> bool:
+	return not is_operation(char)
+
+def postfix_to_infix(postfix_expr: str) -> str:
+	infix_expr = []
+	for char in postfix_expr:
+		if is_digit(char):
+			infix_expr.append(char)
+		else:
+			operand1 = infix_expr.pop()
+			operand2 = infix_expr.pop()
+			operator = char
+			expr = '(' + operand2 + ' ' + operator + ' ' + operand1 + ')' # mejorar con f'({bla}...)'
+			infix_expr.append(expr)
+
+	return infix_expr.pop()
+
 def compute25(expr_input: str) -> str:
 	'''Descripción de la función'''
 	count = 0
@@ -86,9 +103,11 @@ def compute25(expr_input: str) -> str:
 								expr7 += char7
 
 								count += 1
-								print(count, expr7)
-
-
+								#print(count, expr7, postfix_to_infix(expr7), eval(postfix_to_infix(expr7)))
+								infix_expr = postfix_to_infix(expr7)
+								if eval(infix_expr)==25:
+									print(f'Se probaron {count} combinaciones para encontrar la expresión: {infix_expr}')
+									return infix_expr
 
 
 	return "SIN SOLUCIÓN"
