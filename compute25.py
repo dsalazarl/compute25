@@ -24,7 +24,7 @@ def postfix_to_infix(postfix_expr: str) -> str:
 
 	return infix_expr.pop()
 
-def compute25(expr_input: str) -> str:
+def compute25(expr_input: str, verbose: bool = False) -> str:
 	'''Descripción de la función'''
 	count = 0
 	idx_first_digit = list(range(len(expr_input)))
@@ -105,9 +105,15 @@ def compute25(expr_input: str) -> str:
 								count += 1
 								#print(count, expr7, postfix_to_infix(expr7), eval(postfix_to_infix(expr7)))
 								infix_expr = postfix_to_infix(expr7)
-								if eval(infix_expr)==25:
-									print(f'Se probaron {count} combinaciones para encontrar la expresión: {infix_expr}')
-									return infix_expr
+								try:
+									value = eval(infix_expr)
+									if value == 25:
+										if verbose:
+											print(f'Se probaron {count} combinaciones para encontrar la expresión: {infix_expr}')
+										return infix_expr
+								except ZeroDivisionError:
+									#print('División por cero, se probarán otras combinaciones')
+									continue
 
 
 	return "SIN SOLUCIÓN"
@@ -122,6 +128,6 @@ if __name__ == "__main__":
 			running = False
 		else:
 			if bool(re.match("^\d{4}$", str_in)):
-				print(compute25(str_in))
+				print(compute25(str_in, verbose=True))
 			else:
 				print("Formato incorrecto!\n")
